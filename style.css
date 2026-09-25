@@ -1,0 +1,108 @@
+/* Logo do cabeçalho */
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: .75rem;
+  background: linear-gradient(135deg, var(--bs-primary), #7c3aed);
+  color: #fff;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, .35);
+}
+
+/* Logo grande da home */
+.brand-logo-lg {
+  width: 96px;
+  height: 96px;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, var(--bs-primary), #7c3aed);
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 30px rgba(37, 99, 235, .35);
+}
+
+/* Utilitário extra */
+.fs-7 { font-size: .75rem; }
+
+/* Avatar circular usado na listagem e na área do usuário */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text-emphasis);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: .75rem;
+  flex-shrink: 0;
+}
+.avatar--lg {
+  width: 72px;
+  height: 72px;
+  font-size: 1.4rem;
+}
+
+/* Barra de força da senha */
+.password-strength {
+  display: flex;
+  gap: 4px;
+}
+.password-strength span {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bs-secondary-bg);
+  transition: background .2s ease;
+}
+.password-strength[data-nivel="1"] span:nth-child(-n+1) { background: var(--bs-danger); }
+.password-strength[data-nivel="2"] span:nth-child(-n+2) { background: var(--bs-warning); }
+.password-strength[data-nivel="3"] span:nth-child(-n+3) { background: #eab308; }
+.password-strength[data-nivel="4"] span:nth-child(-n+4) { background: var(--bs-success); }
+
+/* Lista de detalhes no modal */
+.detalhe-lista {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: .5rem 1rem;
+  margin: 0;
+  font-size: .9rem;
+}
+.detalhe-lista dt { font-weight: 600; color: var(--bs-secondary-color); }
+.detalhe-lista dd { margin: 0; word-break: break-word; }
+
+/* ID monoespaçado */
+.mono { font-family: "Courier New", monospace; font-size: .8rem; color: var(--bs-secondary-color); }
+
+/* Feedback de erro sempre visível quando preenchido via JS */
+.invalid-feedback:not(:empty) { display: block; }
+
+/* Botões da navbar com aparência de nav-link */
+.navbar .nav-link {
+  background: transparent;
+  border: 0;
+  border-radius: .5rem;
+  padding: .4rem .9rem;
+  font-weight: 500;
+  color: var(--bs-secondary-color);
+}
+.navbar .nav-link:hover { color: var(--bs-primary); }
+.navbar .nav-link.active {
+  background: var(--bs-primary);
+  color: #fff;
+}
+
+/* Destaque suave do hero da home */
+.home-hero {
+  background: var(--bs-body-bg);
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px rgba(15, 23, 42, .06);
+  padding: 3rem 1.5rem;
+}

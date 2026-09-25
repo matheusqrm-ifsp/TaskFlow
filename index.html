@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — Sistema Lista de Tarefas</title>
+  <meta name="description" content="TaskFlow: sistema de lista de tarefas." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-body-tertiary d-flex flex-column min-vh-100">
+
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#" data-view="home">
+        <span class="brand-logo">TF</span>
+        <span class="d-flex flex-column lh-1">
+          <strong>TaskFlow</strong>
+          <small class="text-body-secondary fs-7">Sistema Lista de Tarefas</small>
+        </span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navConteudo" aria-controls="navConteudo"
+              aria-expanded="false" aria-label="Alternar navegação">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navConteudo">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1" id="nav-principal">
+          <li class="nav-item" data-nav="home">
+            <button type="button" class="nav-link" data-view="home">Início</button>
+          </li>
+          <li class="nav-item" data-nav="cadastro-publico">
+            <button type="button" class="nav-link" data-view="cadastro-publico">Cadastrar</button>
+          </li>
+          <li class="nav-item" data-nav="login">
+            <button type="button" class="nav-link" data-view="login">Entrar</button>
+          </li>
+          <li class="nav-item" data-nav="area-usuario">
+            <button type="button" class="nav-link" data-view="area-usuario">Minha Área</button>
+          </li>
+          <li class="nav-item" data-nav="meus-dados">
+            <button type="button" class="nav-link" data-view="meus-dados">Meus Dados</button>
+          </li>
+          <li class="nav-item" data-nav="cadastro">
+            <button type="button" class="nav-link" data-view="cadastro">Cadastro de Usuários</button>
+          </li>
+          <li class="nav-item" data-nav="gerenciamento">
+            <button type="button" class="nav-link" data-view="gerenciamento">Gerenciamento de Usuários</button>
+          </li>
+        </ul>
+
+        <div id="nav-sessao" class="d-none align-items-center gap-2">
+          <span class="text-body-secondary small" id="nav-username"></span>
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-logout">Sair</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 flex-grow-1">
+
+    <!-- =====================================================================
+         HOME (conteúdo dinâmico conforme sessão)
+         ===================================================================== -->
+    <section id="view-home" class="view">
+      <div class="home-hero text-center py-5 my-3">
+        <div class="brand-logo-lg mx-auto mb-4" aria-hidden="true">TF</div>
+        <h1 class="h2 fw-bold mb-2" id="home-titulo">Bem-vindo ao TaskFlow</h1>
+        <p class="text-body-secondary mb-4" id="home-subtitulo">
+          Organize suas tarefas de forma simples, clara e produtiva.
+        </p>
+        <div class="d-flex justify-content-center gap-2 flex-wrap" id="home-acoes"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         CADASTRO PÚBLICO (sem login)
+         ===================================================================== -->
+    <section id="view-cadastro-publico" class="view" hidden>
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+          <div class="mb-3 text-center">
+            <h2 class="h4 mb-1">Criar conta</h2>
+            <p class="text-body-secondary mb-0">Preencha os dados abaixo para se cadastrar no TaskFlow.</p>
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <form id="form-cadastro-publico" novalidate autocomplete="off">
+
+                <div class="row g-3">
+
+                  <div class="col-12">
+                    <label for="pub-nome" class="form-label">Nome completo <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="pub-nome" name="nome"
+                           maxlength="80" placeholder="Ex.: Maria Souza" autocomplete="name" />
+                    <div class="invalid-feedback" data-error-for="nome"></div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="pub-email" class="form-label">E-mail <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" id="pub-email" name="email"
+                           maxlength="120" placeholder="nome@dominio.com" autocomplete="email" />
+                    <div class="invalid-feedback" data-error-for="email"></div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="pub-nascimento" class="form-label">Data de nascimento</label>
+                    <input type="date" class="form-control" id="pub-nascimento" name="dataNascimento" />
+                    <div class="invalid-feedback" data-error-for="dataNascimento"></div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="pub-senha" class="form-label">Senha <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <input type="password" class="form-control" id="pub-senha" name="senha"
+                             maxlength="60" placeholder="Mínimo de 8 caracteres" autocomplete="new-password" />
+                      <button type="button" class="btn btn-outline-secondary"
+                              data-toggle-senha="pub-senha" aria-label="Mostrar ou ocultar a senha">👁</button>
+                    </div>
+                    <div class="password-strength mt-2" id="pub-forca" data-nivel="0" aria-hidden="true">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <small class="text-body-secondary d-block" id="pub-forca-texto">Força da senha</small>
+                    <small class="text-body-secondary d-block">Use ao menos 8 caracteres, combinando letras e números.</small>
+                    <div class="invalid-feedback d-block" data-error-for="senha"></div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="pub-confirmacao" class="form-label">Confirmar senha <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <input type="password" class="form-control" id="pub-confirmacao" name="confirmacaoSenha"
+                             maxlength="60" placeholder="Repita a senha" autocomplete="new-password" />
+                      <button type="button" class="btn btn-outline-secondary"
+                              data-toggle-senha="pub-confirmacao" aria-label="Mostrar ou ocultar a confirmação">👁</button>
+                    </div>
+                    <div class="invalid-feedback d-block" data-error-for="confirmacaoSenha"></div>
+                  </div>
+
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center gap-2 mt-4 flex-wrap">
+                  <button type="button" class="btn btn-link px-0 text-decoration-none" data-view="login">
+                    Já tenho conta — Entrar
+                  </button>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary" data-view="home">Voltar</button>
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         LOGIN
+         ===================================================================== -->
+    <section id="view-login" class="view" hidden>
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+
+          <div class="mb-3 text-center">
+            <h2 class="h4 mb-1">Entrar</h2>
+            <p class="text-body-secondary mb-0">Acesse sua conta para continuar.</p>
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <form id="form-login" novalidate autocomplete="off">
+
+                <div class="mb-3">
+                  <label for="login-email" class="form-label">E-mail <span class="text-danger">*</span></label>
+                  <input type="email" class="form-control" id="login-email" name="email"
+                         maxlength="120" placeholder="nome@dominio.com" autocomplete="email" />
+                  <div class="invalid-feedback" data-error-for="email"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="login-senha" class="form-label">Senha <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="login-senha" name="senha"
+                           maxlength="60" placeholder="Digite sua senha" autocomplete="current-password" />
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-toggle-senha="login-senha" aria-label="Mostrar ou ocultar a senha">👁</button>
+                  </div>
+                  <div class="invalid-feedback d-block" data-error-for="senha"></div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                  <button type="button" class="btn btn-link px-0 text-decoration-none" data-view="cadastro-publico">
+                    Não tenho conta — Cadastrar
+                  </button>
+                  <button type="submit" class="btn btn-primary px-4">Entrar</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         ÁREA DO USUÁRIO (perfil "Usuário")
+         ===================================================================== -->
+    <section id="view-area-usuario" class="view" hidden>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card shadow-sm">
+            <div class="card-body text-center py-5 px-4">
+              <div class="avatar avatar--lg mx-auto mb-3" id="area-avatar">?</div>
+              <h2 class="h4 mb-3">Olá, <span id="area-nome">Usuário</span>!</h2>
+              <p class="text-body-secondary mb-4">
+                Estamos preparando tudo para você. Em breve haverá novidades por aqui.
+              </p>
+              <button type="button" class="btn btn-outline-primary" data-view="meus-dados">
+                Editar meus dados
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MEUS DADOS (perfil "Usuário")
+         ===================================================================== -->
+    <section id="view-meus-dados" class="view" hidden>
+      <div class="mb-3">
+        <h2 class="h4 mb-1">Meus Dados</h2>
+        <p class="text-body-secondary mb-0">Atualize suas informações pessoais e altere sua senha.</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h3 class="h6 text-uppercase text-body-secondary mb-3">Dados pessoais</h3>
+              <form id="form-meus-dados" novalidate autocomplete="off">
+
+                <div class="mb-3">
+                  <label for="md-nome" class="form-label">Nome completo <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="md-nome" name="nome" maxlength="80" />
+                  <div class="invalid-feedback" data-error-for="nome"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="md-email" class="form-label">E-mail <span class="text-danger">*</span></label>
+                  <input type="email" class="form-control" id="md-email" name="email" maxlength="120" />
+                  <div class="invalid-feedback" data-error-for="email"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="md-nascimento" class="form-label">Data de nascimento</label>
+                  <input type="date" class="form-control" id="md-nascimento" name="dataNascimento" />
+                  <div class="invalid-feedback" data-error-for="dataNascimento"></div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary">Salvar dados</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h3 class="h6 text-uppercase text-body-secondary mb-3">Alterar senha</h3>
+              <form id="form-alterar-senha" novalidate autocomplete="off">
+
+                <div class="mb-3">
+                  <label for="md-senha-atual" class="form-label">Senha atual <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="md-senha-atual" name="senhaAtual"
+                           maxlength="60" autocomplete="current-password" />
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-toggle-senha="md-senha-atual" aria-label="Mostrar ou ocultar a senha">👁</button>
+                  </div>
+                  <div class="invalid-feedback d-block" data-error-for="senhaAtual"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="md-senha-nova" class="form-label">Nova senha <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="md-senha-nova" name="senhaNova"
+                           maxlength="60" autocomplete="new-password" />
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-toggle-senha="md-senha-nova" aria-label="Mostrar ou ocultar a nova senha">👁</button>
+                  </div>
+                  <div class="password-strength mt-2" id="md-forca" data-nivel="0" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <small class="text-body-secondary d-block" id="md-forca-texto">Força da senha</small>
+                  <div class="invalid-feedback d-block" data-error-for="senhaNova"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="md-senha-confirmar" class="form-label">Confirmar nova senha <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="md-senha-confirmar" name="confirmacaoNova"
+                           maxlength="60" autocomplete="new-password" />
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-toggle-senha="md-senha-confirmar" aria-label="Mostrar ou ocultar a confirmação">👁</button>
+                  </div>
+                  <div class="invalid-feedback d-block" data-error-for="confirmacaoNova"></div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary">Alterar senha</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         CADASTRO DE USUÁRIOS (somente Administrador)
+         ===================================================================== -->
+    <section id="view-cadastro" class="view" hidden>
+      <div class="mb-3">
+        <h2 class="h4 mb-1">Cadastro de Usuários</h2>
+        <p class="text-body-secondary mb-0">Crie novas contas de acesso ao TaskFlow.</p>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form id="form-cadastro" novalidate autocomplete="off">
+
+            <div class="row g-3">
+
+              <div class="col-12">
+                <label for="cad-nome" class="form-label">Nome completo <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="cad-nome" name="nome"
+                       maxlength="80" placeholder="Ex.: Maria Souza" autocomplete="off" />
+                <div class="invalid-feedback" data-error-for="nome"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="cad-email" class="form-label">E-mail <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" id="cad-email" name="email"
+                       maxlength="120" placeholder="nome@dominio.com" autocomplete="off" />
+                <div class="invalid-feedback" data-error-for="email"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="cad-nascimento" class="form-label">Data de nascimento</label>
+                <input type="date" class="form-control" id="cad-nascimento" name="dataNascimento" />
+                <div class="invalid-feedback" data-error-for="dataNascimento"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="cad-senha" class="form-label">Senha <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="cad-senha" name="senha"
+                         maxlength="60" placeholder="Mínimo de 8 caracteres" autocomplete="new-password" />
+                  <button type="button" class="btn btn-outline-secondary"
+                          data-toggle-senha="cad-senha" aria-label="Mostrar ou ocultar a senha">👁</button>
+                </div>
+                <div class="password-strength mt-2" id="cad-forca" data-nivel="0" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <small class="text-body-secondary d-block" id="cad-forca-texto">Força da senha</small>
+                <small class="text-body-secondary d-block">Use ao menos 8 caracteres, combinando letras e números.</small>
+                <div class="invalid-feedback d-block" data-error-for="senha"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="cad-confirmacao" class="form-label">Confirmar senha <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="cad-confirmacao" name="confirmacaoSenha"
+                         maxlength="60" placeholder="Repita a senha" autocomplete="new-password" />
+                  <button type="button" class="btn btn-outline-secondary"
+                          data-toggle-senha="cad-confirmacao" aria-label="Mostrar ou ocultar a confirmação">👁</button>
+                </div>
+                <div class="invalid-feedback d-block" data-error-for="confirmacaoSenha"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="cad-perfil" class="form-label">Perfil de acesso <span class="text-danger">*</span></label>
+                <select class="form-select" id="cad-perfil" name="perfil"></select>
+                <div class="invalid-feedback" data-error-for="perfil"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="cad-status" class="form-label">Status <span class="text-danger">*</span></label>
+                <select class="form-select" id="cad-status" name="status"></select>
+                <div class="invalid-feedback" data-error-for="status"></div>
+              </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4 flex-wrap">
+              <button type="reset" class="btn btn-outline-secondary" id="btn-limpar-cadastro">Limpar formulário</button>
+              <button type="submit" class="btn btn-primary">Cadastrar usuário</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         GERENCIAMENTO DE USUÁRIOS (somente Administrador)
+         ===================================================================== -->
+    <section id="view-gerenciamento" class="view" hidden>
+      <div class="mb-3">
+        <h2 class="h4 mb-1">Gerenciamento de Usuários</h2>
+        <p class="text-body-secondary mb-0">Consulte, edite e remova os usuários cadastrados.</p>
+      </div>
+
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <div class="row g-2 align-items-center">
+
+            <div class="col-lg-5 col-md-12">
+              <div class="input-group">
+                <span class="input-group-text" aria-hidden="true">🔎</span>
+                <input type="search" class="form-control" id="busca"
+                       placeholder="Buscar por nome ou e-mail..."
+                       aria-label="Buscar usuários" />
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+              <select class="form-select" id="filtro-perfil" aria-label="Filtrar por perfil"></select>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+              <select class="form-select" id="filtro-status" aria-label="Filtrar por status"></select>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+              <select class="form-select" id="ordenacao" aria-label="Ordenar lista">
+                <option value="recentes">Mais recentes</option>
+                <option value="antigos">Mais antigos</option>
+                <option value="nome-asc">Nome (A–Z)</option>
+                <option value="nome-desc">Nome (Z–A)</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span id="contador" class="text-body-secondary small fw-semibold">0 usuários</span>
+          </div>
+
+          <div class="table-responsive border rounded">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Usuário</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">Perfil</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Cadastro</th>
+                  <th scope="col" class="text-end">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-usuarios"></tbody>
+            </table>
+          </div>
+
+          <div id="estado-vazio" class="text-center py-5" hidden>
+            <div class="fs-1" aria-hidden="true">🗂️</div>
+            <p class="fw-semibold mb-1">Nenhum usuário cadastrado até o momento.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-body-secondary py-4 small">
+    TaskFlow — Sistema Lista de Tarefas
+  </footer>
+
+  <!-- ================= MODAL: EDITAR USUÁRIO (admin) ================= -->
+  <div class="modal fade" id="modal-edicao" tabindex="-1" aria-labelledby="edicao-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="edicao-titulo">Editar usuário</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <form id="form-edicao" novalidate autocomplete="off">
+          <div class="modal-body">
+            <p class="text-body-secondary small border-bottom pb-2 mb-3" id="edicao-identificador"></p>
+
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="edi-nome" class="form-label">Nome completo <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="edi-nome" name="nome" maxlength="80" />
+                <div class="invalid-feedback" data-error-for="nome"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edi-email" class="form-label">E-mail <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" id="edi-email" name="email" maxlength="120" />
+                <div class="invalid-feedback" data-error-for="email"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edi-nascimento" class="form-label">Data de nascimento</label>
+                <input type="date" class="form-control" id="edi-nascimento" name="dataNascimento" />
+                <div class="invalid-feedback" data-error-for="dataNascimento"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edi-perfil" class="form-label">Perfil de acesso <span class="text-danger">*</span></label>
+                <select class="form-select" id="edi-perfil" name="perfil"></select>
+                <div class="invalid-feedback" data-error-for="perfil"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edi-status" class="form-label">Status <span class="text-danger">*</span></label>
+                <select class="form-select" id="edi-status" name="status"></select>
+                <div class="invalid-feedback" data-error-for="status"></div>
+              </div>
+
+              <div class="col-12">
+                <label for="edi-senha" class="form-label">Nova senha</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="edi-senha" name="senha"
+                         maxlength="60" placeholder="Deixe em branco para manter a senha atual"
+                         autocomplete="new-password" />
+                  <button type="button" class="btn btn-outline-secondary"
+                          data-toggle-senha="edi-senha" aria-label="Mostrar ou ocultar a senha">👁</button>
+                </div>
+                <small class="text-body-secondary d-block">Preencha apenas se desejar redefinir a senha do usuário.</small>
+                <div class="invalid-feedback d-block" data-error-for="senha"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CONSULTAR USUÁRIO ================= -->
+  <div class="modal fade" id="modal-detalhe" tabindex="-1" aria-labelledby="detalhe-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detalhe-titulo">Dados do usuário</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body" id="detalhe-corpo"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-primary" id="btn-editar-do-detalhe">Editar usuário</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CONFIRMAR EXCLUSÃO ================= -->
+  <div class="modal fade" id="modal-confirmar" tabindex="-1" aria-labelledby="confirmar-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmar-titulo">Confirmar exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmar-texto" class="mb-2">Deseja realmente excluir este usuário?</p>
+          <p class="text-danger small mb-0">Esta ação é permanente e não poderá ser desfeita.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="btn-confirmar-exclusao">Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOASTS ================= -->
+  <div id="toast-area"
+       class="toast-container position-fixed bottom-0 end-0 p-3"
+       aria-live="polite" aria-atomic="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
